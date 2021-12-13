@@ -155,7 +155,8 @@ void PanasonicACCNT::set_data(bool set) {
   std::string preset = determine_preset(this->data[5]);
   bool nanoex = determine_preset_nanoex(this->data[5]);
   bool eco = determine_eco(this->data[8]);
-  bool econavi = determine_econavi(this->data[5]);
+  bool d8_15 = determine_8_15(this->data[8]);
+  bool econavi = determine_econavi(this->data[1]);
   bool mildDry = determine_mild_dry(this->data[2]);
   
   this->update_target_temperature((int8_t) this->data[1]);
@@ -205,6 +206,7 @@ void PanasonicACCNT::set_data(bool set) {
   this->update_nanoex(nanoex);
   this->update_eco(eco);
   this->update_econavi(econavi);
+  this->update_8_15(d8_15);
   this->update_mild_dry(mildDry);
 }
 
@@ -453,6 +455,14 @@ bool PanasonicACCNT::determine_econavi(uint8_t value) {
   }
 }
 
+bool PanasonicACCNT::determine_8_15(uint8_t value) {
+  
+  if (value == 0x1E)
+    return true;
+  else
+    return false;
+}
+
 bool PanasonicACCNT::determine_mild_dry(uint8_t value) {
   if (value == 0x7F)
     return true;
@@ -574,6 +584,24 @@ void PanasonicACCNT::on_econavi_change(bool state) {
 
   send_command(this->data, CommandType::Normal, CTRL_HEADER);
 }
+
+void PanasonicACCNT::on_8_15_change(bool state) {
+  if (this->state_ != ACState::Ready)
+    return;
+
+  this->d8_15_state_ = state;
+
+  if (state) {
+    ESP_LOGV(TAG, "Turning 8/15 mode on");
+    this->data[1] = 0x1E;
+  } else {
+    ESP_LOGV(TAG, "Turning 8/15 mode off");
+    this->data[1] = 0x28;
+  }
+
+  send_command(this->data, CommandType::Normal, CTRL_HEADER);
+}
+
 
 void PanasonicACCNT::on_mild_dry_change(bool state) {
   if (this->state_ != ACState::Ready)

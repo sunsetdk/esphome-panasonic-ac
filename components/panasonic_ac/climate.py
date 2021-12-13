@@ -38,6 +38,7 @@ CONF_NANOEX_SWITCH = "nanoex_switch"
 CONF_ECO_SWITCH = "eco_switch"
 CONF_ECONAVI_SWITCH = "econavi_switch"
 CONF_MILD_DRY_SWITCH = "mild_dry_switch"
+CONF_8_15_SWITCH = "8_15_switch"
 CONF_CURRENT_POWER_CONSUMPTION = "current_power_consumption"
 CONF_WLAN = "wlan"
 CONF_CNT = "cnt"
@@ -88,6 +89,7 @@ CONFIG_SCHEMA = cv.typed_schema(
                 cv.Optional(CONF_ECO_SWITCH): SWITCH_SCHEMA,
                 cv.Optional(CONF_ECONAVI_SWITCH): SWITCH_SCHEMA,
                 cv.Optional(CONF_MILD_DRY_SWITCH): SWITCH_SCHEMA,
+                cv.Optional(CONF_8_15_SWITCH): SWITCH_SCHEMA,
                 cv.Optional(CONF_CURRENT_TEMPERATURE_SENSOR): cv.use_id(sensor.Sensor),
                 cv.Optional(CONF_CURRENT_POWER_CONSUMPTION): sensor.sensor_schema(
                   unit_of_measurement=UNIT_WATT,
@@ -123,7 +125,7 @@ async def to_code(config):
         sens = await sensor.new_sensor(config[CONF_OUTSIDE_TEMPERATURE])
         cg.add(var.set_outside_temperature_sensor(sens))
 
-    for s in [CONF_ECO_SWITCH, CONF_NANOEX_SWITCH, CONF_MILD_DRY_SWITCH, CONF_ECONAVI_SWITCH]:
+    for s in [CONF_ECO_SWITCH, CONF_NANOEX_SWITCH, CONF_MILD_DRY_SWITCH, CONF_ECONAVI_SWITCH, CONF_8_15_SWITCH]:
         if s in config:
             conf = config[s]
             a_switch = cg.new_Pvariable(conf[CONF_ID])

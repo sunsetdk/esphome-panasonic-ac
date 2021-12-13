@@ -38,6 +38,7 @@ class PanasonicAC : public Component, public uart::UARTDevice, public climate::C
   void set_nanoex_switch(switch_::Switch *nanoex_switch);
   void set_eco_switch(switch_::Switch *eco_switch);
   void set_econavi_switch(switch_::Switch *econavi_switch);
+  void set_8_15_switch(switch_::Switch *d8_15_switch);
   void set_mild_dry_switch(switch_::Switch *mild_dry_switch);
   void set_current_power_consumption_sensor(sensor::Sensor *current_power_consumption_sensor);
 
@@ -53,6 +54,7 @@ class PanasonicAC : public Component, public uart::UARTDevice, public climate::C
   switch_::Switch *nanoex_switch_ = nullptr;                    // Switch to toggle nanoeX on/off
   switch_::Switch *eco_switch_ = nullptr;                       // Switch to toggle eco mode on/off
   switch_::Switch *econavi_switch_ = nullptr;                   // Switch to toggle econavi mode on/off
+  switch_::Switch *d8_15_switch_ = nullptr;                   // Switch to toggle econavi mode on/off
   switch_::Switch *mild_dry_switch_ = nullptr;                  // Switch to toggle mild dry mode on/off
   sensor::Sensor *current_temperature_sensor_ = nullptr;        // Sensor to use for current temperature where AC does not report
   sensor::Sensor *current_power_consumption_sensor_ = nullptr;  // Sensor to store current power consumption from queries
@@ -63,6 +65,7 @@ class PanasonicAC : public Component, public uart::UARTDevice, public climate::C
   bool nanoex_state_ = false;    // Stores the state of nanoex to prevent duplicate packets
   bool eco_state_ = false;       // Stores the state of eco to prevent duplicate packets
   bool econavi_state_ = false;       // Stores the state of econavi to prevent duplicate packets
+  bool d8_15_state_ = false;       // Stores the state of econavi to prevent duplicate packets
   bool mild_dry_state_ = false;  // Stores the state of mild dry to prevent duplicate packets
 
   bool waiting_for_response_ = false;  // Set to true if we are waiting for a response
@@ -89,6 +92,7 @@ class PanasonicAC : public Component, public uart::UARTDevice, public climate::C
   void update_nanoex(bool nanoex);
   void update_eco(bool eco);
   void update_econavi(bool econavi);
+  void update_8_15(bool d8_15);
   void update_mild_dry(bool mild_dry);
   void update_current_power_consumption(int16_t power);
 
@@ -97,6 +101,7 @@ class PanasonicAC : public Component, public uart::UARTDevice, public climate::C
   virtual void on_nanoex_change(bool nanoex) = 0;
   virtual void on_eco_change(bool eco) = 0;
   virtual void on_econavi_change(bool econavi) = 0;
+  virtual void on_8_15_change(bool econavi) = 0;
   virtual void on_mild_dry_change(bool mild_dry) = 0;
 
   climate::ClimateAction determine_action();

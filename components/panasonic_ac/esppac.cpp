@@ -128,6 +128,13 @@ void PanasonicAC::update_econavi(bool econavi) {
   }
 }
 
+void PanasonicAC::update_8_15(bool d8_15) {
+  if (this->d8_15_switch_ != nullptr) {
+    this->d8_15_state_ = d8_15;
+    this->d8_15_switch_->publish_state(this->d8_15_state_);
+  }
+}
+
 void PanasonicAC::update_mild_dry(bool mild_dry) {
   if (this->mild_dry_switch_ != nullptr) {
     this->mild_dry_state_ = mild_dry;
@@ -220,6 +227,15 @@ void PanasonicAC::set_econavi_switch(switch_::Switch *econavi_switch) {
     if (state == this->econavi_state_)
       return;
     this->on_econavi_change(state);
+  });
+}
+
+void PanasonicAC::set_8_15_switch(switch_::Switch *d8_15_switch) {
+  this->d8_15_switch_ = d8_15_switch;
+  this->d8_15_switch_->add_on_state_callback([this](bool state) {
+    if (state == this->d8_15_state_)
+      return;
+    this->on_8_15_change(state);
   });
 }
 
